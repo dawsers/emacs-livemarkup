@@ -1,0 +1,79 @@
+* livemarkup.el
+
+** Introduction
+
+=livemarkup.el= is a package based on mola-T's [[https://github.com/mola-T/flymd][=flymd=]]. I simply took that
+package, simplified it and added support for Asciidoc and Org, removing
+Markdown.
+
+
+** Requirements
+
+If you want to use Asciidoc preview, you will need [[https://asciidoctor.org/][=asciidoctor=]] installed in
+your system and path.
+
+
+** Custom Variables
+
+*** =livemarkup-refresh-interval=
+
+Time to refresh the output. Default value is 1.5 seconds.
+
+*** =livemarkup-browser-open-function=
+
+Function used to open the browser. Default value is =nil=, which means use
+=browse-url-default-browser=.
+
+*** =livemarkup-output-directory=
+
+The directory where livemarkup output files will be stored. If =nil=, the
+working directory of the tracked file is used. Default value is =nil=.
+
+*** =livemarkup-close-buffer-delete-temp-files=
+
+If this is non-nil, livemarkup.html will be deleted when the tracked buffer gets
+killed. Default value is  =nil=.
+
+
+** Configuration
+
+If you make a symbolic link from =livemarkup.el= to
+=~/.emacs.d/lisp/livemarkup.el= the following can be used as an example
+configuration.
+
+
+#+begin_src emacs-lisp
+(use-package livemarkup
+  :load-path "~/.emacs.d/lisp"
+  :config
+  (setq livemarkup-output-directory "/tmp"
+        livemarkup-close-buffer-delete-temp-files t)
+)
+#+end_src
+
+
+** How to Use
+
+*** =M-x livemarkup-track-asciidoc=
+
+Starts a live preview of the current buffer as an Asciidoc file, opening the
+preview in the default browser or the one defined in
+=livemarkup-browser-open-function=.
+
+*** =M-x livemarkup-track-org=
+
+Starts a live preview of the current buffer as an Org file, opening the
+preview in the default browser or the one defined in
+=livemarkup-browser-open-function=.
+
+*** =M-x livemarkup-untrack=
+
+Stops tracking the current file for preview. Another way to stop the timer and
+clean up the temporary files is to simply kill the buffer that is being
+previewed.
+
+*** Navigation
+
+Te Emacs buffer and the preview have linked scrolling, with the buffer as the
+controller. This means scrolling is only possible in the buffer, with the
+preview following suit.
