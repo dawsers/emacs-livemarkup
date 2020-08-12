@@ -175,13 +175,22 @@ If nil, the working directory of the tracked file is used."
 
 (defun livemarkup-get-output-directory (buffer)
   "Gets the correct output directory for livemarkup preview files of BUFFER."
+  (require 'tramp)
   (if livemarkup-output-directory
       (let ((output-dir (file-name-as-directory
                          (concat (file-name-as-directory livemarkup-output-directory)
                                  (secure-hash 'md5 (buffer-file-name buffer))))))
         (make-directory output-dir t)
         output-dir)
-    (file-name-directory (buffer-file-name buffer))))
+    (let ((file-name (buffer-file-name buffer)))
+      ;; using /tmp as output directory for tramp files
+      (if (tramp-tramp-file-p file-name)
+	  (let ((output-dir (file-name-as-directory
+			     (concat "/tmp/"
+				     (secure-hash 'md5 file-name)))))
+	    (make-directory output-dir t)
+	    output-dir)
+	(file-name-directory file-name)))))
 
 (provide 'livemarkup)
 ;;; livemarkup.el ends here
