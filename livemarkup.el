@@ -185,8 +185,11 @@ If nil, the working directory of the tracked file is used."
     (let ((file-name (buffer-file-name buffer)))
       ;; using /tmp as output directory for tramp files
       (if (tramp-tramp-file-p file-name)
-	  (concat "/tmp/"
-		  (secure-hash 'md5 file-name))
+	  (let ((output-dir (file-name-as-directory
+			     (concat "/tmp/"
+				     (secure-hash 'md5 file-name)))))
+	    (make-directory output-dir t)
+	    output-dir)
 	(file-name-directory file-name)))))
 
 (provide 'livemarkup)
